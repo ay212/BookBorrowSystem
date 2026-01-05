@@ -12,11 +12,12 @@ class ReaderMainView : public QWidget
     Q_OBJECT
 
 public:
-    explicit ReaderMainView(QWidget *parent = nullptr);
+    explicit ReaderMainView(QWidget *parent = nullptr, QString username = "");
     ~ReaderMainView();
 
 private:
     Ui::ReaderMainView *ui;
+    QString m_username;
 };
 
 #endif // READERMAINVIEW_H
