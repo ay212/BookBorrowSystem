@@ -21,6 +21,7 @@ SOURCES += \
     readereditview.cpp \
     readermainview.cpp \
     readermanageview.cpp \
+    registerview.cpp \
     statview.cpp
 
 HEADERS += \
@@ -35,6 +36,7 @@ HEADERS += \
     readereditview.h \
     readermainview.h \
     readermanageview.h \
+    registerview.h \
     statview.h
 
 FORMS += \
@@ -49,6 +51,7 @@ FORMS += \
     readereditview.ui \
     readermainview.ui \
     readermanageview.ui \
+    registerview.ui \
     statview.ui
 
 # Default rules for deployment.
