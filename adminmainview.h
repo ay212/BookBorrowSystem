@@ -23,7 +23,12 @@ private slots:
     void on_btnBorrowReturn_clicked();
 
     void on_btnStat_clicked();
-
+signals:
+    // 发信号给MasterView，切换功能视图
+    void goBookManageView();
+    void goReaderManageView();
+    void goBorrowReturnView();
+    void goStatView();
 private:
     Ui::AdminMainView *ui;
     QString m_username; // 存储当前登录读者账号（用于个人借阅记录查询）

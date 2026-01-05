@@ -12,3 +12,27 @@ BookManageView::~BookManageView()
 {
     delete ui;
 }
+
+void BookManageView::on_btnAdd_clicked()
+{
+    emit goBookEditView(-1);
+}
+
+
+void BookManageView::on_btnSearch_clicked()
+{
+
+}
+
+
+void BookManageView::on_btnDelete_clicked()
+{
+
+}
+
+
+void BookManageView::on_btnEdit_clicked()
+{
+
+}
+

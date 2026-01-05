@@ -12,6 +12,8 @@
 #include "statview.h"
 #include "bookqueryview.h"
 #include "personalborrowview.h"
+#include "bookeditview.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -54,6 +56,7 @@ private:
     BookManageView *bookManageView;
     ReaderManageView *readerManageView;
     BorrowReturnView *borrowReturnView;
+    BookEditView *bookEditView;
     StatView *statView;
     BookQueryView *bookQueryView;
     PersonalBorrowView *personalBorrowView;

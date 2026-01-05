@@ -15,24 +15,24 @@ AdminMainView::~AdminMainView()
 
 void AdminMainView::on_btnBookManage_clicked()
 {
-
+    emit goBookManageView();
 }
 
 
 void AdminMainView::on_btnReaderManage_clicked()
 {
-
+    emit goReaderManageView();
 }
 
 
 void AdminMainView::on_btnBorrowReturn_clicked()
 {
-
+    emit goBorrowReturnView();
 }
 
 
 void AdminMainView::on_btnStat_clicked()
 {
-
+     emit goStatView();
 }
 

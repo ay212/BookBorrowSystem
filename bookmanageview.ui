@@ -22,7 +22,7 @@
         <string/>
        </property>
        <property name="placeholderText">
-        <string>请输入书名进行查找</string>
+        <string>请输入书名/作者进行查找</string>
        </property>
       </widget>
      </item>
@@ -32,7 +32,7 @@
         <string>查找</string>
        </property>
        <property name="icon">
-        <iconset resource="../Lab4/lab4.qrc">
+        <iconset>
          <normaloff>:/img/search.png</normaloff>:/img/search.png</iconset>
        </property>
       </widget>
@@ -43,7 +43,7 @@
         <string>添加</string>
        </property>
        <property name="icon">
-        <iconset resource="../Lab4/lab4.qrc">
+        <iconset>
          <normaloff>:/img/new.png</normaloff>:/img/new.png</iconset>
        </property>
       </widget>
@@ -54,7 +54,7 @@
         <string>删除</string>
        </property>
        <property name="icon">
-        <iconset resource="../Lab4/lab4.qrc">
+        <iconset>
          <normaloff>:/img/delete.png</normaloff>:/img/delete.png</iconset>
        </property>
       </widget>
@@ -65,7 +65,7 @@
         <string>修改</string>
        </property>
        <property name="icon">
-        <iconset resource="../Lab4/lab4.qrc">
+        <iconset>
          <normaloff>:/img/edit.png</normaloff>:/img/edit.png</iconset>
        </property>
       </widget>
@@ -77,8 +77,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../Lab4/lab4.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

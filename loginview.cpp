@@ -18,5 +18,7 @@ void LoginView::on_btnLogin_clicked()
     QString username = ui->leUsername->text().trimmed();
     QString password = ui->lePassword->text().trimmed();
     emit goAdminMainView(username);
+
+    //emit goReaderMainView(username);
 }
 

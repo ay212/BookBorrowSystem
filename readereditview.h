@@ -12,7 +12,7 @@ class ReaderEditView : public QWidget
     Q_OBJECT
 
 public:
-    explicit ReaderEditView(QWidget *parent = nullptr);
+    explicit ReaderEditView(QWidget *parent = nullptr, int readerId = -1);
     ~ReaderEditView();
 
 private:
