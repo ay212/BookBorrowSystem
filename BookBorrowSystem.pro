@@ -12,6 +12,7 @@ SOURCES += \
     adminmainview.cpp \
     bookeditview.cpp \
     bookmanageview.cpp \
+    borrowreturnview.cpp \
     loginview.cpp \
     main.cpp \
     masterview.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     adminmainview.h \
     bookeditview.h \
     bookmanageview.h \
+    borrowreturnview.h \
     loginview.h \
     masterview.h \
     readereditview.h \
@@ -33,6 +35,7 @@ FORMS += \
     adminmainview.ui \
     bookeditview.ui \
     bookmanageview.ui \
+    borrowreturnview.ui \
     loginview.ui \
     masterview.ui \
     readereditview.ui \
