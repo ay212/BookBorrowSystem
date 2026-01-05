@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     adminmainview.cpp \
+    bookeditview.cpp \
     bookmanageview.cpp \
     loginview.cpp \
     main.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     adminmainview.h \
+    bookeditview.h \
     bookmanageview.h \
     loginview.h \
     masterview.h \
@@ -25,6 +27,7 @@ HEADERS += \
 
 FORMS += \
     adminmainview.ui \
+    bookeditview.ui \
     bookmanageview.ui \
     loginview.ui \
     masterview.ui \
