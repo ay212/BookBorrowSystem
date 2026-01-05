@@ -17,6 +17,7 @@ SOURCES += \
     loginview.cpp \
     main.cpp \
     masterview.cpp \
+    personalborrowview.cpp \
     readereditview.cpp \
     readermainview.cpp \
     readermanageview.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     borrowreturnview.h \
     loginview.h \
     masterview.h \
+    personalborrowview.h \
     readereditview.h \
     readermainview.h \
     readermanageview.h \
@@ -43,6 +45,7 @@ FORMS += \
     borrowreturnview.ui \
     loginview.ui \
     masterview.ui \
+    personalborrowview.ui \
     readereditview.ui \
     readermainview.ui \
     readermanageview.ui \
