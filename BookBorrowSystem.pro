@@ -9,17 +9,23 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    adminmainview.cpp \
     loginview.cpp \
     main.cpp \
-    masterview.cpp
+    masterview.cpp \
+    readermainview.cpp
 
 HEADERS += \
+    adminmainview.h \
     loginview.h \
-    masterview.h
+    masterview.h \
+    readermainview.h
 
 FORMS += \
+    adminmainview.ui \
     loginview.ui \
-    masterview.ui
+    masterview.ui \
+    readermainview.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
