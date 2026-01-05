@@ -18,7 +18,8 @@ SOURCES += \
     masterview.cpp \
     readereditview.cpp \
     readermainview.cpp \
-    readermanageview.cpp
+    readermanageview.cpp \
+    statview.cpp
 
 HEADERS += \
     adminmainview.h \
@@ -29,7 +30,8 @@ HEADERS += \
     masterview.h \
     readereditview.h \
     readermainview.h \
-    readermanageview.h
+    readermanageview.h \
+    statview.h
 
 FORMS += \
     adminmainview.ui \
@@ -40,7 +42,8 @@ FORMS += \
     masterview.ui \
     readereditview.ui \
     readermainview.ui \
-    readermanageview.ui
+    readermanageview.ui \
+    statview.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
