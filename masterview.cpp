@@ -26,6 +26,9 @@ void MasterView::goLoginView()
     connect(loginView, &LoginView::goRegisterView, this, &MasterView::goRegisterView);
     connect(loginView, &LoginView::goAdminMainView, this, &MasterView::goAdminMainView);
     connect(loginView, &LoginView::goReaderMainView, this, &MasterView::goReaderMainView);
+    connect(loginView, &LoginView::loginFailed, this, [=](QString reason) {
+        qWarning() << "Login failed:" << reason;
+    });
 }
 
 void MasterView::goRegisterView()

@@ -1,7 +1,7 @@
 #include "readereditview.h"
 #include "ui_readereditview.h"
 
-ReaderEditView::ReaderEditView(QWidget *parent)
+ReaderEditView::ReaderEditView(QWidget *parent, int readerId)
     : QWidget(parent)
     , ui(new Ui::ReaderEditView)
 {

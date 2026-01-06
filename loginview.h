@@ -2,6 +2,7 @@
 #define LOGINVIEW_H
 
 #include <QWidget>
+#include "idatabase.h"
 
 namespace Ui {
 class LoginView;
@@ -19,11 +20,14 @@ signals:
     void goRegisterView();
     void goAdminMainView(QString username);
     void goReaderMainView(QString username);
+    void loginFailed(QString reason);
 private slots:
     void on_btnLogin_clicked();
 
 private:
     Ui::LoginView *ui;
+
+    IDatabase& m_db;
 };
 
 #endif // LOGINVIEW_H
