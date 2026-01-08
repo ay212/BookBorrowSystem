@@ -337,6 +337,30 @@ bool IDatabase::searchBorrow(QString filter)
     return borrowTabModel->select();
 }
 
+QSqlTableModel *IDatabase::getOverdueBorrowModel()
+{
+    QSqlTableModel* overdueModel = new QSqlTableModel(this, database);
+    // 仅筛选：未归还（return_date为空）且借阅超过30天的记录
+    overdueModel->setQuery(R"(
+    SELECT
+        borrows.borrow_id,
+        readers.reader_name,
+        books.book_name,
+        date(borrows.borrow_date) AS borrow_date
+    FROM borrows
+    LEFT JOIN readers ON borrows.reader_id = readers.reader_id
+    LEFT JOIN books ON borrows.book_id = books.book_id
+    WHERE borrows.return_date = ''
+      AND julianday('now') - julianday(borrows.borrow_date) > 0
+)");
+    // 设置列名（简化，不显示逾期天数）
+    overdueModel->setHeaderData(0, Qt::Horizontal, "借阅ID");
+    overdueModel->setHeaderData(1, Qt::Horizontal, "读者姓名");
+    overdueModel->setHeaderData(2, Qt::Horizontal, "图书名称");
+    overdueModel->setHeaderData(3, Qt::Horizontal, "借阅日期");
+    return overdueModel;
+}
+
 
 
 IDatabase::IDatabase(QObject *parent)

@@ -58,6 +58,8 @@ public:
     QSqlTableModel* getBorrowModel() { return borrowTabModel; }
     QItemSelectionModel* getBorrowSelectionModel() { return borrowSelectionModel; }
 
+    QSqlTableModel* getOverdueBorrowModel();
+
 private:
         explicit IDatabase(QObject *parent = nullptr);
     IDatabase(IDatabase const&)               = delete;
