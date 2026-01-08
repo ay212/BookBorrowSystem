@@ -48,12 +48,13 @@ public:
     QItemSelectionModel* getBookSelectionModel() { return bookSelectionModel; }
 
     // ===================== 借阅记录管理=====================
-    bool initBorrowModel();              // 初始化借阅模型
-    int addNewBorrow();                  // 新增借阅记录
-    bool searchBorrow(QString filter);   // 搜索借阅记录
-    void deleteCurrentBorrow();          // 删除当前借阅记录
-    bool submitBorrowEdit();             // 提交借阅修改
-    void revertBorrowEdit();             // 回滚借阅修改
+    bool initBorrowModel();
+    // 借书：参数=读者ID、图书ID
+    bool borrowBook(int readerId, int bookId);
+    // 还书：参数=借阅记录ID
+    bool returnBook(int borrowId);
+    // 搜索借阅记录（支持按读者ID/图书ID搜索）
+    bool searchBorrow(QString filter);
     QSqlTableModel* getBorrowModel() { return borrowTabModel; }
     QItemSelectionModel* getBorrowSelectionModel() { return borrowSelectionModel; }
 

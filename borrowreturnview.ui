@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>470</width>
     <height>300</height>
    </rect>
   </property>
@@ -41,6 +41,13 @@
       <widget class="QPushButton" name="btnReturn">
        <property name="text">
         <string>还书</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSearch">
+       <property name="text">
+        <string>搜索</string>
        </property>
       </widget>
      </item>

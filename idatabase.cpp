@@ -233,6 +233,110 @@ void IDatabase::revertBookEdit()
     if (bookTabModel) bookTabModel->revertAll();
 }
 
+bool IDatabase::initBorrowModel()
+{
+    borrowTabModel = new QSqlTableModel(this, database);
+    borrowTabModel->setTable("borrows");
+    borrowTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    // 按借阅日期排序
+    borrowTabModel->setSort(borrowTabModel->fieldIndex("borrow_date"), Qt::DescendingOrder);
+    if (!(borrowTabModel->select())) {
+        qCritical() << "borrows表模型初始化失败：" << borrowTabModel->lastError().text();
+        return false;
+    }
+    borrowSelectionModel = new QItemSelectionModel(borrowTabModel);
+    return true;
+}
+
+bool IDatabase::borrowBook(int readerId, int bookId)
+{
+    // 先检查图书库存
+    QSqlQuery checkStockQuery;
+    checkStockQuery.exec(QString("SELECT stock FROM books WHERE book_id = %1").arg(bookId));
+    if (!checkStockQuery.next() || checkStockQuery.value(0).toInt() <= 0) {
+        return false; // 库存不足
+    }
+
+    // 开启事务（确保借阅记录和库存同步）
+    database.transaction();
+
+    // 插入借阅记录
+    QSqlQuery insertBorrowQuery;
+    QString borrowDate = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    insertBorrowQuery.prepare(R"(
+        INSERT INTO borrows (reader_id, book_id, borrow_date, return_date)
+        VALUES (:readerId, :bookId, :borrowDate, '')
+    )");
+    insertBorrowQuery.bindValue(":readerId", readerId);
+    insertBorrowQuery.bindValue(":bookId", bookId);
+    insertBorrowQuery.bindValue(":borrowDate", borrowDate);
+    if (!insertBorrowQuery.exec()) {
+        database.rollback();
+        return false;
+    }
+
+    // 扣减图书库存
+    QSqlQuery updateStockQuery;
+    updateStockQuery.exec(QString("UPDATE books SET stock = stock - 1 WHERE book_id = %1").arg(bookId));
+    if (!updateStockQuery.exec()) {
+        database.rollback();
+        return false;
+    }
+
+    // 提交事务
+    database.commit();
+    // 刷新模型
+    borrowTabModel->select();
+    bookTabModel->select();
+    return true;
+}
+
+bool IDatabase::returnBook(int borrowId)
+{
+    // 先检查借阅记录是否存在且未归还
+    QSqlQuery checkBorrowQuery;
+    checkBorrowQuery.exec(QString("SELECT book_id FROM borrows WHERE borrow_id = %1 AND return_date = ''").arg(borrowId));
+    if (!checkBorrowQuery.next()) {
+        return false; // 记录不存在或已归还
+    }
+    int bookId = checkBorrowQuery.value(0).toInt();
+
+    // 开启事务
+    database.transaction();
+
+    // 更新归还日期
+    QSqlQuery updateReturnQuery;
+    QString returnDate = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    updateReturnQuery.exec(QString(
+                               "UPDATE borrows SET return_date = '%1' WHERE borrow_id = %2"
+                               ).arg(returnDate).arg(borrowId));
+    if (!updateReturnQuery.exec()) {
+        database.rollback();
+        return false;
+    }
+
+    // 恢复图书库存
+    QSqlQuery updateStockQuery;
+    updateStockQuery.exec(QString("UPDATE books SET stock = stock + 1 WHERE book_id = %1").arg(bookId));
+    if (!updateStockQuery.exec()) {
+        database.rollback();
+        return false;
+    }
+
+    // 提交事务
+    database.commit();
+    // 刷新模型
+    borrowTabModel->select();
+    bookTabModel->select();
+    return true;
+}
+
+bool IDatabase::searchBorrow(QString filter)
+{
+    borrowTabModel->setFilter(filter);
+    return borrowTabModel->select();
+}
+
 
 
 IDatabase::IDatabase(QObject *parent)
