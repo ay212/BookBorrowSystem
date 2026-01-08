@@ -21,8 +21,11 @@ signals:
     void goAdminMainView(QString username);
     void goReaderMainView(QString username);
     void loginFailed(QString reason);
+
 private slots:
     void on_btnLogin_clicked();
+
+    void on_btnRegister_clicked();
 
 private:
     Ui::LoginView *ui;

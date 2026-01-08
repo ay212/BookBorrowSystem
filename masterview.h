@@ -13,6 +13,7 @@
 #include "bookqueryview.h"
 #include "personalborrowview.h"
 #include "bookeditview.h"
+#include "readereditview.h"
 #include "idatabase.h"
 
 QT_BEGIN_NAMESPACE
@@ -38,6 +39,7 @@ public slots:
     void goBookManageView();
     void goBookEditView(int row);
     void goReaderManageView();
+    void goReaderEditView(int row);
     void goBorrowReturnView();
     void goStatView();
     void goBookQueryView();
@@ -46,6 +48,10 @@ public slots:
 
 private slots:
     void on_btBack_clicked();
+
+    void on_stackedWidget_currentChanged(int arg1);
+
+    void on_btLogout_clicked();
 
 private:
     void pushWidgetToStackView(QWidget *widget);
@@ -57,6 +63,7 @@ private:
     ReaderMainView *readerMainView;
     BookManageView *bookManageView;
     ReaderManageView *readerManageView;
+    ReaderEditView *readerEditView;
     BorrowReturnView *borrowReturnView;
     BookEditView *bookEditView;
     StatView *statView;

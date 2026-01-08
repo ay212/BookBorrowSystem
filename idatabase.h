@@ -24,6 +24,7 @@ public:
 
     // ===================== 登录相关=====================
     QString userLogin(QString userName, QString password, QString& role);
+    bool userRegister(QString username, QString password, QString role);
     bool initUserModel();
 
     // ===================== 读者管理=====================

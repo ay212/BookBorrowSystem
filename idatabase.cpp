@@ -53,6 +53,27 @@ QString IDatabase::userLogin(QString username, QString password, QString &role)
     }
 }
 
+bool IDatabase::userRegister(QString username, QString password, QString role)
+{
+    // 1. 先检查用户名是否已存在（利用唯一约束）
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT * FROM users WHERE username = :username");
+    checkQuery.bindValue(":username", username);
+    if (checkQuery.exec() && checkQuery.next()) {
+        // 用户名已存在
+        return false;
+    }
+
+    // 2. 插入新用户到users表
+    QSqlQuery insertQuery;
+    insertQuery.prepare("INSERT INTO users (username, password, role) VALUES (:username, :password, :role)");
+    insertQuery.bindValue(":username", username);
+    insertQuery.bindValue(":password", password); // 注：实际项目要加密，这里先简单存储
+    insertQuery.bindValue(":role", role); // 比如"reader"（读者）
+
+    return insertQuery.exec();
+}
+
 bool IDatabase::initUserModel()
 {
     userTabModel = new QSqlTableModel(this, database);
@@ -84,18 +105,29 @@ bool IDatabase::initReaderModel()
 
 int IDatabase::addNewReader()
 {
-    readerTabModel->insertRow(readerTabModel->rowCount(), QModelIndex());
-    QModelIndex curIndex = readerTabModel->index(readerTabModel->rowCount()-1, 1);
-    int curRecNo = curIndex.row();
-    QSqlRecord curRec = readerTabModel->record(curRecNo);
-    // 换字段名book_id→reader_id，其他字段对应替换
-    curRec.setValue("reader_id", QUuid::createUuid().toString(QUuid::WithoutBraces));
-    curRec.setValue("reader_name", ""); // 换book_name→reader_name
-    curRec.setValue("gender", ""); // 新增读者字段
-    curRec.setValue("phone", ""); // 新增读者字段
-    curRec.setValue("username", ""); // 新增读者字段
+    // 第一步：查询readers表的最大reader_id（不是books表）
+    QSqlQuery query;
+    query.exec("SELECT MAX(reader_id) FROM readers"); // 改books→readers，book_id→reader_id
+    int maxId = 0;
+    if (query.next()) {
+        maxId = query.value(0).toInt();
+    }
+    int newReaderId = maxId + 1; // 新读者ID=最大ID+1
 
-    readerTabModel->setRecord(curRecNo, curRec);
+    // 第二步：用readerTabModel插入新行（不是bookTabModel）
+    readerTabModel->insertRow(readerTabModel->rowCount(), QModelIndex()); // 改bookTabModel→readerTabModel
+    QModelIndex curIndex = readerTabModel->index(readerTabModel->rowCount()-1, 0); // 改1→0（reader_id是第0列）
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = readerTabModel->record(curRecNo); // 改bookTabModel→readerTabModel
+
+    // 赋值读者字段
+    curRec.setValue("reader_id", newReaderId);
+    curRec.setValue("reader_name", "");
+    curRec.setValue("gender", "");
+    curRec.setValue("phone", "");
+    curRec.setValue("username", "");
+
+    readerTabModel->setRecord(curRecNo, curRec); // 改bookTabModel→readerTabModel
     return curIndex.row();
 }
 

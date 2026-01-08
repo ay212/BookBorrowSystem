@@ -57,5 +57,12 @@ void LoginView::on_btnLogin_clicked()
         QMessageBox::critical(this, "登录失败", "数据库异常！");
         emit loginFailed("数据库错误");
     }
+
+}
+
+
+void LoginView::on_btnRegister_clicked()
+{
+    emit goRegisterView();
 }
 
