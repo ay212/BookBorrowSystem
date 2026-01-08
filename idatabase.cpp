@@ -14,7 +14,7 @@ QString IDatabase::userLogin(QString username, QString password, QString &role)
     }
 
     QSqlQuery query(database);
-    // 关键：精准查询users表的username/password/role字段（适配图片表结构）
+    // 关键：精准查询users表的username/password/role字段
     query.prepare("SELECT username, password, role FROM users WHERE username = :USER");
     query.bindValue(":USER", username);
 
@@ -71,13 +71,134 @@ bool IDatabase::initUserModel()
 bool IDatabase::initReaderModel()
 {
     readerTabModel = new QSqlTableModel(this, database);
-    readerTabModel->setTable("readers"); // 绑定readers表
-    readerTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit); // 手动提交
-    readerTabModel->setSort(readerTabModel->fieldIndex("readerName"), Qt::AscendingOrder); // 按姓名排序
-    if (!(readerTabModel->select())) return false;
-
+    readerTabModel->setTable("readers"); // 换表名books→readers
+    readerTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    readerTabModel->setSort(readerTabModel->fieldIndex("reader_name"), Qt::AscendingOrder); // 换排序字段book_name→reader_name
+    if (!(readerTabModel->select())) {
+        qCritical() << "readers表模型初始化失败：" << readerTabModel->lastError().text();
+        return false;
+    }
     readerSelectionModel = new QItemSelectionModel(readerTabModel);
     return true;
+}
+
+int IDatabase::addNewReader()
+{
+    readerTabModel->insertRow(readerTabModel->rowCount(), QModelIndex());
+    QModelIndex curIndex = readerTabModel->index(readerTabModel->rowCount()-1, 1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = readerTabModel->record(curRecNo);
+    // 换字段名book_id→reader_id，其他字段对应替换
+    curRec.setValue("reader_id", QUuid::createUuid().toString(QUuid::WithoutBraces));
+    curRec.setValue("reader_name", ""); // 换book_name→reader_name
+    curRec.setValue("gender", ""); // 新增读者字段
+    curRec.setValue("phone", ""); // 新增读者字段
+    curRec.setValue("username", ""); // 新增读者字段
+
+    readerTabModel->setRecord(curRecNo, curRec);
+    return curIndex.row();
+}
+
+// 复刻searchBook → searchReader（只换表名相关）
+bool IDatabase::searchReader(QString filter)
+{
+    readerTabModel->setFilter(filter);
+    return readerTabModel->select();
+}
+
+void IDatabase::deleteCurrentReader()
+{
+    QModelIndex curIndex = readerSelectionModel->currentIndex();
+    readerTabModel->removeRow(curIndex.row());
+    readerTabModel->submitAll();
+    readerTabModel->select();
+}
+
+bool IDatabase::submitReaderEdit()
+{
+    bool result = readerTabModel->submitAll();
+    if (result) readerTabModel->select();
+    return result;
+}
+
+void IDatabase::revertReaderEdit()
+{
+    if (readerTabModel) readerTabModel->revertAll();
+}
+
+bool IDatabase::initBookModel()
+{
+    bookTabModel = new QSqlTableModel(this, database);
+    bookTabModel->setTable("books");
+    bookTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    // 新增：按book_name排序
+    bookTabModel->setSort(bookTabModel->fieldIndex("book_name"), Qt::AscendingOrder);
+    // 新增：校验select结果
+    if (!(bookTabModel->select())) {
+        qCritical() << "books表模型初始化失败：" << bookTabModel->lastError().text();
+        return false;
+    }
+    bookSelectionModel = new QItemSelectionModel(bookTabModel);
+    return true;
+
+}
+
+int IDatabase::addNewBook()
+{
+    // 第一步：查询当前books表中最大的book_id
+    QSqlQuery query;
+    query.exec("SELECT MAX(book_id) FROM books");
+    int maxId = 0;
+    if (query.next()) {
+        maxId = query.value(0).toInt(); // 获取最大ID
+    }
+    int newBookId = maxId + 1; // 新ID = 最大ID + 1（保证连续）
+
+    // 第二步：插入新行并赋值
+    bookTabModel->insertRow(bookTabModel->rowCount(), QModelIndex());
+    QModelIndex curIndex = bookTabModel->index(bookTabModel->rowCount()-1, 1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = bookTabModel->record(curRecNo);
+
+    // 项目1步骤4：设置字段值
+    curRec.setValue("book_id", newBookId);
+    curRec.setValue("book_name", ""); // 空值兜底
+    curRec.setValue("author", "");
+    curRec.setValue("category", "");
+    curRec.setValue("stock", 0);
+
+
+    // 项目1步骤5：设置记录（完全复刻）
+    bookTabModel->setRecord(curRecNo, curRec);
+
+    // 项目1步骤6：返回行号（完全复刻）
+    return curIndex.row();
+}
+
+bool IDatabase::searchBook(QString filter)
+{
+    bookTabModel->setFilter(filter);
+    return bookTabModel->select();
+}
+
+void IDatabase::deleteCurrentBook()
+{
+    QModelIndex curIndex = bookSelectionModel->currentIndex();
+    bookTabModel->removeRow(curIndex.row());
+    bookTabModel->submitAll();
+    bookTabModel->select();
+}
+
+bool IDatabase::submitBookEdit()
+{
+    bool result = bookTabModel->submitAll();
+    if (result) bookTabModel->select();
+    return result;
+}
+
+void IDatabase::revertBookEdit()
+{
+    if (bookTabModel) bookTabModel->revertAll();
 }
 
 
@@ -88,14 +209,13 @@ IDatabase::IDatabase(QObject *parent)
     // 初始化所有业务模型
     initDatabase();
     initReaderModel();
-    // initBookModel();
+    initBookModel();
     // initBorrowModel();
 }
 
 void IDatabase::initDatabase()
 {
     database = QSqlDatabase::addDatabase("QSQLITE");
-    // 替换为你的BookBorrowSystem数据库路径（绝对/相对路径均可）
     QString aFile = "D:/qtcode/BookBorrowSystem.db";
     database.setDatabaseName(aFile);
 

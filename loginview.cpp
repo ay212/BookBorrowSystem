@@ -28,11 +28,11 @@ void LoginView::on_btnLogin_clicked()
         return;
     }
 
-    // 2. 调用数据库登录接口（项目1风格：通过单例调用）
+    // 2. 调用数据库登录接口
     QString role;
     QString loginResult = m_db.userLogin(username, password, role);
 
-    // 3. 根据结果发送对应信号（对齐项目1的信号槽逻辑）
+    // 3. 根据结果发送对应信号
     if (loginResult == "LoginOK") {
         QMessageBox::information(this, "登录成功", QString("欢迎！角色：%1").arg(role));
         if (role == "admin") {

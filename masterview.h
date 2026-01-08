@@ -13,7 +13,7 @@
 #include "bookqueryview.h"
 #include "personalborrowview.h"
 #include "bookeditview.h"
-
+#include "idatabase.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,6 +28,7 @@ class MasterView : public QWidget
 public:
     MasterView(QWidget *parent = nullptr);
     ~MasterView();
+
 public slots:
     // 视图切换槽函数（接收子视图信号）
     void goLoginView();
@@ -35,6 +36,7 @@ public slots:
     void goAdminMainView(QString username);
     void goReaderMainView(QString username);
     void goBookManageView();
+    void goBookEditView(int row);
     void goReaderManageView();
     void goBorrowReturnView();
     void goStatView();

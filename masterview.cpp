@@ -64,22 +64,21 @@ void MasterView::goReaderMainView(QString username)
 
 void MasterView::goBookManageView()
 {
-    qDebug()<<"goBookManageView";
+
     bookManageView = new BookManageView(this);
-    pushWidgetToStackView(bookManageView);
+    pushWidgetToStackView(bookManageView); // 替换直接addWidget
 
-    // 绑定唯一信号：处理图书新增/修改跳转
-    connect(bookManageView, &BookManageView::goBookEditView, this, [=](int bookId) {
-        // 创建编辑界面并入栈
-        BookEditView *editView = new BookEditView(this, bookId);
-        pushWidgetToStackView(editView);
+    // 绑定编辑跳转信号
+    connect(bookManageView, &BookManageView::goBookEditView, this, &MasterView::goBookEditView);
+}
 
-        // 绑定编辑完成信号：回退并刷新表格
-        /*connect(editView, &BookEditView::editFinished, this, [=](bool success) {
-            goPreviousView(); // 编辑窗口出栈销毁
-            bookManageView->onEditFinished(success); // 通知图书管理界面刷新
-        });*/
-    });
+void MasterView::goBookEditView(int row)
+{
+    bookEditView = new BookEditView(this, row);
+    pushWidgetToStackView(bookEditView); // 复用项目一的统一栈管理函数
+
+    // 绑定统一回退信号
+    connect(bookEditView, &BookEditView::goPreviousView, this, &MasterView::goPreviousView);
 }
 
 void MasterView::goReaderManageView()
@@ -132,9 +131,18 @@ void MasterView::goPreviousView()
 
 void MasterView::pushWidgetToStackView(QWidget *widget)
 {
+    if (!widget) return;
+    // 先检查是否已存在，避免重复添加
+    for (int i = 0; i < ui->stackedWidget->count(); ++i) {
+        if (ui->stackedWidget->widget(i) == widget) {
+            ui->stackedWidget->setCurrentWidget(widget);
+            ui->labelTitle->setText(widget->windowTitle());
+            return;
+        }
+    }
     ui->stackedWidget->addWidget(widget);
-    int count =ui->stackedWidget->count();
-    ui->stackedWidget->setCurrentIndex(count-1);//总是显示最新加入的View
+    int count = ui->stackedWidget->count();
+    ui->stackedWidget->setCurrentIndex(count-1);
     ui->labelTitle->setText(widget->windowTitle());
 }
 

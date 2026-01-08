@@ -99,10 +99,17 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QLineEdit" name="leUsername"/>
+          <widget class="QLineEdit" name="leUsername">
+           <property name="text">
+            <string>admin</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLineEdit" name="lePassword">
+           <property name="text">
+            <string>123456</string>
+           </property>
            <property name="echoMode">
             <enum>QLineEdit::EchoMode::Password</enum>
            </property>

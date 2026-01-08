@@ -2,6 +2,8 @@
 #define BOOKEDITVIEW_H
 
 #include <QWidget>
+#include <QDataWidgetMapper>
+#include "idatabase.h"
 
 namespace Ui {
 class BookEditView;
@@ -15,10 +17,18 @@ public:
     explicit BookEditView(QWidget *parent = nullptr, int bookId = -1);
     ~BookEditView();
 
+signals:
+    void goPreviousView();
+
+private slots:
+    void on_btnConfirm_clicked();
+
+    void on_btnCancel_clicked();
+
 private:
     Ui::BookEditView *ui;
-    int m_bookId;                  // 图书ID（-1=新增，>0=修改）
-    bool m_isEdit;                 // 模式标记：true=修改，false=新增（自动判断）
+    QDataWidgetMapper *dataMapper;
+
 };
 
 #endif // BOOKEDITVIEW_H

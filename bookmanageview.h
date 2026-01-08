@@ -2,6 +2,9 @@
 #define BOOKMANAGEVIEW_H
 
 #include <QWidget>
+#include <QHeaderView>
+#include <QMessageBox>
+#include "idatabase.h"
 
 namespace Ui {
 class BookManageView;
@@ -15,6 +18,9 @@ public:
     explicit BookManageView(QWidget *parent = nullptr);
     ~BookManageView();
 
+
+
+
 private slots:
     void on_btnAdd_clicked();
 
@@ -24,10 +30,11 @@ private slots:
 
     void on_btnEdit_clicked();
 signals:
-    // 唯一信号：跳转图书编辑界面（bookId=-1=新增，bookId>0=修改）
-    void goBookEditView(int bookId);
+    // 唯一信号：跳转图书编辑界面
+    void goBookEditView(int row);
 private:
     Ui::BookManageView *ui;
+
 };
 
 #endif // BOOKMANAGEVIEW_H

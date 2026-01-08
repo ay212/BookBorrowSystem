@@ -6,6 +6,9 @@
 #include <QSqlDatabase>
 #include <QDataWidgetMapper>
 #include <QMessageBox>
+#include <QUuid>
+#include <QDebug>
+#include <QDateTime>
 
 class IDatabase : public QObject
 {
@@ -24,12 +27,12 @@ public:
     bool initUserModel();
 
     // ===================== 读者管理=====================
-    bool initReaderModel();          // 初始化读者模型（对应initPatientModel）
-    int addNewReader();              // 新增读者（对应addNewPatient）
-    bool searchReader(QString filter); // 搜索读者（对应searchPatient）
-    void deleteCurrentReader();      // 删除当前读者（对应deleteCurrentPatient）
-    bool submitReaderEdit();         // 提交读者修改（对应submitPatientEdit）
-    void revertReaderEdit();         // 回滚读者修改（对应revertPatientEdit）
+    bool initReaderModel();          // 初始化读者模型
+    int addNewReader();              // 新增读者
+    bool searchReader(QString filter); // 搜索读者
+    void deleteCurrentReader();      // 删除当前读者
+    bool submitReaderEdit();         // 提交读者修改
+    void revertReaderEdit();         // 回滚读者修改
     QSqlTableModel* getReaderModel() { return readerTabModel; }
     QItemSelectionModel* getReaderSelectionModel() { return readerSelectionModel; }
 
