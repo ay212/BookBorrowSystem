@@ -21,7 +21,7 @@ public:
         return instance;
     }
 
-
+    QSqlDatabase getDatabase() const { return database; }
     // ===================== 登录相关=====================
     QString userLogin(QString userName, QString password, QString& role);
     bool userRegister(QString username, QString password, QString role);

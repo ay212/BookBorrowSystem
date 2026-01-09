@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>个人借阅记录</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QTableWidget" name="tablePersonal"/>
+    <widget class="QTableView" name="tablePersonal"/>
    </item>
   </layout>
  </widget>

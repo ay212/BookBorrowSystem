@@ -123,6 +123,7 @@ void MasterView::goBookQueryView()
     qDebug()<<"goBookQueryView";
     bookQueryView = new BookQueryView(this);
     pushWidgetToStackView(bookQueryView);
+    connect(bookQueryView, &BookQueryView::goPreviousView, this, &MasterView::goPreviousView);
 }
 
 void MasterView::goPersonalBorrowView(QString username)
